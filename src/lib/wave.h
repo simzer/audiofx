@@ -6,15 +6,44 @@
 namespace afx
 {
 
-class Sin
+class Periodic
 {
 public:
-    Sin(double freq, const IClock &clock);
+    Periodic(double freq, const IClock &clock);
     void setFreq(double value);
-    double operator()();
-private:
+protected:
     const IClock &clock;
     double freq;
+    double periodPos() const;
+    double periodPosInRad() const;
+};
+
+class Sin : public Periodic
+{
+public:
+    using Periodic::Periodic;
+    double operator()();
+};
+
+class SawTooth : public Periodic
+{
+public:
+    using Periodic::Periodic;
+    double operator()();
+};
+
+class Square : public Periodic
+{
+public:
+    using Periodic::Periodic;
+    double operator()();
+};
+
+class Triangle : public Periodic
+{
+public:
+    using Periodic::Periodic;
+    double operator()();
 };
 
 }
