@@ -47,3 +47,13 @@ double Triangle::operator()()
     auto saw = 2 * ( p - floor(0.5 + p) );
     return 2 * fabs(saw) - 1;
 }
+
+Pulse::Pulse(double freq, double width, const IClock &clock)
+    : Periodic(freq, clock),
+      width(width)
+{}
+
+double Pulse::operator()()
+{
+    return periodPos() < width ? 1 : -1;
+}

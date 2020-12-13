@@ -46,6 +46,15 @@ public:
     double operator()();
 };
 
+class Pulse : public Periodic
+{
+public:
+    Pulse(double freq, double width, const IClock &clock);
+    double operator()();
+private:
+    double width;
+};
+
 }
 
 #endif
