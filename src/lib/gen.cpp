@@ -4,10 +4,13 @@
 
 using namespace afx;
 
+Gen::Gen(const IClock &clock)
+    : clock(clock)
+{}
+
 double Gen::operator()()
 {
-    static double time = 0;
-    time += 1.0/44100;
+    auto time = clock.getTime();
     double freq = 440;
     return sin(2 * M_PI * time * freq);
 }
