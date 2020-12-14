@@ -1,7 +1,7 @@
 #ifndef AUDIOFX_BASICWAVE_H
 #define AUDIOFX_BASICWAVE_H
 
-#include "periodicwave.h"
+#include "periodic.h"
 
 namespace afx
 {

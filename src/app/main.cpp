@@ -1,6 +1,6 @@
 #include "clock.h"
-#include "wavegen/basicwave.h"
-#include "wavegen/fourierwave.h"
+#include "wavegen/basic.h"
+#include "wavegen/fourier.h"
 #include "bufferedout.h"
 
 #include <cmath>

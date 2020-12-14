@@ -1,4 +1,4 @@
-#include "basicwave.h"
+#include "basic.h"
 
 #include <cmath>
 

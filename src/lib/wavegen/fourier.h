@@ -1,7 +1,7 @@
 #ifndef AUDIOFX_FOURIERWAVE_H
 #define AUDIOFX_FOURIERWAVE_H
 
-#include "periodicwave.h"
+#include "periodic.h"
 
 #include <cmath>
 

@@ -1,4 +1,4 @@
-#include "periodicwave.h"
+#include "periodic.h"
 
 #include <cmath>
 
