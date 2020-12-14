@@ -50,16 +50,3 @@ int main(int argc, char *argv[])
     }
     return 0;
 }
-
-/* tested:
-afx::wave::Sin
-afx::wave::Square
-afx::wave::SawTooth
-afx::wave::Triangle
-afx::wave::Pulse
-afx::wave::fourier::Sawtoot
-afx::wave::fourier::Square
-afx::wave::fourier::Triangle
-afx::wave::fourier::Clausen
-afx::envelope::ADSR
-*/
