@@ -9,6 +9,7 @@ namespace afx
 struct IClock
 {
 public:
+    virtual ~IClock() {}
     double getTime() const;
 protected:
     double time;

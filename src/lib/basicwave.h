@@ -1,22 +1,10 @@
-#ifndef AUDIOFX_WAVE_H
-#define AUDIOFX_WAVE_H
+#ifndef AUDIOFX_BASICWAVE_H
+#define AUDIOFX_BASICWAVE_H
 
-#include "clock.h"
+#include "periodicwave.h"
 
 namespace afx
 {
-
-class Periodic
-{
-public:
-    Periodic(double freq, const IClock &clock);
-    void setFreq(double value);
-protected:
-    const IClock &clock;
-    double freq;
-    double periodPos() const;
-    double periodPosInRad() const;
-};
 
 class Sin : public Periodic
 {
