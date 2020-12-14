@@ -1,4 +1,5 @@
 #include "clock.h"
+#include "stereo.h"
 #include "wavegen/basic.h"
 #include "wavegen/fourier.h"
 #include "envelope.h"
@@ -22,8 +23,7 @@ int main(int argc, char *argv[])
     afx::envelope::ADSR env(1.5/15,0.5,0.6,1.5,clock);
     afx::filter::LowPass lp(200, clock);
     afx::filter::HighPass hp(200,clock);
-    afx::effect::Echo echoL(44100 * 1.2, 0.25);
-    afx::effect::Echo echoR(44100 * 1.5, 0.25);
+    afx::Stereo<afx::effect::Echo> echo(44100 * 1.2, 0.45);
     afx::BufferedOutput<int16_t> out(2*1024);
     afx::monitor::Volume vol(clock);
 
@@ -42,11 +42,10 @@ int main(int argc, char *argv[])
         auto left = lp(mono);
         auto right = hp(mono);
 
-        left = echoL(left);
-        right = echoR(right);
+        auto [l, r] = echo({ left, right });
 
-        out << left << right;
-        vol(left + right);
+        out << l << r;
+        vol(l + r);
         clock.step();
     }
     return 0;
