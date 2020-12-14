@@ -5,6 +5,8 @@
 
 namespace afx
 {
+namespace wave
+{
 
 class Periodic
 {
@@ -19,6 +21,7 @@ protected:
     double periodPosInRad() const;
 };
 
+}
 }
 
 #endif

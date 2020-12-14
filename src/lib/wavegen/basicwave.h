@@ -5,6 +5,8 @@
 
 namespace afx
 {
+namespace wave
+{
 
 class Sin : public Periodic
 {
@@ -43,6 +45,7 @@ private:
     double width;
 };
 
+}
 }
 
 #endif

@@ -7,6 +7,8 @@
 
 namespace afx
 {
+namespace wave
+{
 
 template <typename Coefs>
 class Fourier : public Periodic
@@ -64,6 +66,7 @@ typedef Fourier<SawToothCoefs> FourierSawTooth;
 typedef Fourier<TriangleCoefs> FourierTriangle;
 typedef Fourier<SquareCoefs> FourierSquare;
 
+}
 }
 
 #endif

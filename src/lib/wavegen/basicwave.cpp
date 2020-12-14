@@ -3,6 +3,7 @@
 #include <cmath>
 
 using namespace afx;
+using namespace afx::wave;
 
 double Sin::operator()()
 {

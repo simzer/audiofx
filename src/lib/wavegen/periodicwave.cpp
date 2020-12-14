@@ -3,6 +3,7 @@
 #include <cmath>
 
 using namespace afx;
+using namespace afx::wave;
 
 Periodic::Periodic(double freq, const IClock &clock)
     : freq(freq), clock(clock)
