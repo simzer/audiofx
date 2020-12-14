@@ -8,14 +8,25 @@ namespace afx
 namespace envelope
 {
 
-class Order1st
+class ADSR
 {
 public:
-    Order1st(const IClock &clock);
+    ADSR(double attack,
+         double decay,
+         double sustain,
+         double release,
+         const IClock &clock);
     double operator()(bool pressed);
 private:
     const IClock &clock;
-    double last;
+    bool lastPressed;
+    double startTime;
+    double attack;
+    double decay;
+    double sustain;
+    double release;
+    double value;
+    void update(double coef, double target);
 };
 
 }
