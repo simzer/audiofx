@@ -9,12 +9,14 @@ namespace afx
 {
 namespace wave
 {
+namespace fourier
+{
 
 template <typename Coefs>
-class Fourier : public Periodic
+class Generic : public Periodic
 {
 public:
-    Fourier(double freq, uint8_t steps, const IClock &clock);
+    Generic(double freq, uint8_t steps, const IClock &clock);
     double operator()();
 protected:
     uint8_t steps;
@@ -22,12 +24,12 @@ protected:
 };
 
 template <typename Coefs>
-Fourier<Coefs>::Fourier(double freq, uint8_t steps, const IClock &clock)
+Generic<Coefs>::Generic(double freq, uint8_t steps, const IClock &clock)
     : Periodic (freq, clock), steps(steps)
 {}
 
 template <typename Coefs>
-double Fourier<Coefs>::operator()()
+double Generic<Coefs>::operator()()
 {
     auto a = 0.0;
     auto b = 0.0;
@@ -41,12 +43,14 @@ double Fourier<Coefs>::operator()()
     return res;
 }
 
-struct SawToothCoefs {
+namespace coef {
+
+struct Sawtooth {
     double a(int i) { return 0; }
     double b(int i) { return 1.0 / i; }
 };
 
-struct TriangleCoefs {
+struct Triangle {
     double a(int i) { return 0; }
     double b(int i) {
         if (i % 2 == 0) return 0;
@@ -54,7 +58,7 @@ struct TriangleCoefs {
     }
 };
 
-struct SquareCoefs {
+struct Square {
     double a(int i) { return 0; }
     double b(int i) {
         if (i % 2 == 0) return 0;
@@ -62,10 +66,13 @@ struct SquareCoefs {
     }
 };
 
-typedef Fourier<SawToothCoefs> FourierSawTooth;
-typedef Fourier<TriangleCoefs> FourierTriangle;
-typedef Fourier<SquareCoefs> FourierSquare;
+}
 
+typedef Generic<coef::Sawtooth> Sawtooth;
+typedef Generic<coef::Triangle> Triangle;
+typedef Generic<coef::Square> Square;
+
+}
 }
 }
 
