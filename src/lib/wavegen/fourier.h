@@ -47,7 +47,9 @@ namespace coef {
 
 struct Sawtooth {
     double a(int i) { return 0; }
-    double b(int i) { return 1.0 / i; }
+    double b(int i) {
+        return -(2.0 / M_PI) * pow(-1.0, i) / i;
+    }
 };
 
 struct Triangle {

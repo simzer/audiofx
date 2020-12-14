@@ -24,8 +24,9 @@ double Square::operator()()
 double Triangle::operator()()
 {
     auto p = periodPos();
-    auto saw = 2 * ( p - floor(0.5 + p) );
-    return 2 * fabs(saw) - 1;
+    return p < 0.25 ? 4 * p - floor(p) :
+           p < 0.75 ? 2 - 4 * ( p - floor(p) ) :
+                      - 4 + 4 * ( p - floor(p) );
 }
 
 Pulse::Pulse(double freq, double width, const IClock &clock)
