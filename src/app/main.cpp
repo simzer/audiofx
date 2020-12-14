@@ -8,7 +8,7 @@
 int main(int argc, char *argv[])
 {
     afx::StepClock clock(44100);
-    afx::wave::fourier::Triangle wave0(180, 30, clock);
+    afx::wave::fourier::Clausen wave0(180, 30, clock);
     afx::wave::Square wave1(180, clock);
     afx::wave::SawTooth wave2(220 * 5/4.0, clock);
     afx::BufferedOutput<int16_t> out(2*1024);

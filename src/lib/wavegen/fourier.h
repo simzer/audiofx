@@ -66,11 +66,19 @@ struct Square {
     }
 };
 
+struct Clausen {
+    double a(int i) { return 0; }
+    double b(int i) {
+        return 1.0 / (i*i);
+    }
+};
+
 }
 
 typedef Generic<coef::Sawtooth> Sawtooth;
 typedef Generic<coef::Triangle> Triangle;
 typedef Generic<coef::Square> Square;
+typedef Generic<coef::Clausen> Clausen;
 
 }
 }
