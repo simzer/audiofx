@@ -5,12 +5,39 @@
 #include "envelope.h"
 #include "filter/basic.h"
 #include "effect/echo.h"
+#include "sim/dblpendulum.h"
 #include "bufferedout.h"
 #include "monitor.h"
 
 #include <cmath>
 
+void test0();
+void test1();
+
 int main(int argc, char *argv[])
+{
+//    test0();
+    test1();
+    return 0;
+}
+
+void test1()
+{
+    afx::StepClock clock(44100);
+    afx::sim::DblPendulum sim(clock);
+    afx::BufferedOutput<int16_t> out(2*1024);
+    afx::monitor::Volume vol(clock);
+
+    while (clock.getTime() < 100)
+    {
+        auto val = sim();
+        out << val.first << val.second;
+        vol(val.first + val.second);
+        clock.step();
+    }
+}
+
+void test0()
 {
     afx::StepClock clock(44100);
     auto baseFreq = 80.0;
@@ -48,5 +75,4 @@ int main(int argc, char *argv[])
         vol(l + r);
         clock.step();
     }
-    return 0;
 }
