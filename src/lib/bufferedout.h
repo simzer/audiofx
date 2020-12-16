@@ -21,6 +21,7 @@ public:
 
     BufferedOutput &operator<<(double value)
     {
+        value = std::max(-1.0, std::min(value, 1.0));
         auto sample = (T)(value * std::numeric_limits<T>::max());
         buffer.push_back(sample);
         if (buffer.size() == maxSize)
