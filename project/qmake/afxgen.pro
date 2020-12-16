@@ -12,6 +12,7 @@ REPODIR = $$PWD/../..
 DESTDIR = $$REPODIR/bin
 
 SOURCES += $$files($$REPODIR/src/app/*.cpp, true)
+SOURCES += $$files($$REPODIR/src/test/*.cpp, true)
 HEADERS += $$files($$REPODIR/src/app/*.h, true)
 HEADERS += $$files($$REPODIR/src/app/*.inc, true)
 
