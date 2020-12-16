@@ -9,9 +9,7 @@ class MidiToCSV
 	constructor(name)
 	{
 		this.name = name;
-		this.whole = 2048;
-		this.pulse = 0.5;
-		this.line = 2;
+		this.timeUnit = 1;
 	}
 
 	parse()
@@ -30,6 +28,9 @@ class MidiToCSV
 	{
 		this.midiArray = midiParser.parse(data);
 
+		let bpm = this.midiArray.timeDivision;
+		this.timeUnit = 1 / (8 * bpm);
+
 		for (let ev of this.midiArray.track[1].event)
 			this.parseEvent(ev);
 	}
@@ -42,15 +43,15 @@ class MidiToCSV
 		if (type >= 0)
 		{
 			let index = ev.data[0];
-			let velocity = ev.data[1] / this.whole;
+			let velocity = ev.data[1] * this.timeUnit;
 			let channel = ev.channel;
 			console.log(this.time, type, velocity, channel, index);
 		}
 	}
 		
-	trackTime(time)
+	trackTime(deltaTime)
 	{
-		this.time += time / this.whole;
+		this.time += deltaTime * this.timeUnit * 3;
 	}
 
 	type(type)
