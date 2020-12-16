@@ -29,6 +29,7 @@ public:
 
     PolySynth(const CreateSynth &createSynth, const IClock &clock);
     void push(const Event &event);
+    bool isActive() const;
     double operator()();
 
 private:

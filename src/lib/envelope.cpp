@@ -29,7 +29,7 @@ void ADSR::setPressed(bool pressed)
 
 bool ADSR::isActive() const
 {
-    return pressed || (value > 0.001);
+    return pressed || (value > 0.01);
 }
 
 double ADSR::operator()()

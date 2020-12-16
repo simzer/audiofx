@@ -32,7 +32,7 @@ void test2()
         Synth(double freq, double gain, const IClock &clock)
             : gain(gain),
               wave(freq, 15, clock),
-              env(0.01,0.5,0.75,1.5,clock)
+              env(0.01,0.5,0.75,0.5,clock)
         {}
 
         double operator()() override {
@@ -66,7 +66,7 @@ void test2()
         synth.push(event);
     };
 
-    while (!tracker.finished())
+    while (!tracker.finished() || synth.isActive())
     {
         tracker();
         auto signal = 5 * synth();

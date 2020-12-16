@@ -20,6 +20,11 @@ void PolySynth::push(const Event &event)
     it->second->setPressed(event.pressed);
 }
 
+bool PolySynth::isActive() const
+{
+    return !synthMap.empty();
+}
+
 double PolySynth::operator()()
 {
     auto res = 0.0;
