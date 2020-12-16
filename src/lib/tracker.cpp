@@ -7,12 +7,6 @@
 
 using namespace afx;
 
-double Event::frequency() const
-{
-    auto exponential = (note - 69) / 12.0;
-    return 440 * pow(2, exponential);
-}
-
 Tracker::Tracker(const IClock &clock) : clock(clock) {
     actIndex = 0;
 }
@@ -26,7 +20,7 @@ void Tracker::loadCsv(const std::string &filename)
         double time;
         Event event;
         ss >> time
-           >> event.enable
+           >> event.pressed
            >> event.velocity
            >> event.channel
            >> event.note;

@@ -6,18 +6,10 @@
 #include <vector>
 
 #include "clock.h"
+#include "event.h"
 
 namespace afx
 {
-
-struct Event
-{
-    bool enable;
-    int channel;
-    int note;
-    double velocity;
-    double frequency() const;
-};
 
 class Tracker
 {
