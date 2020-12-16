@@ -16,10 +16,12 @@ public:
          double sustain,
          double release,
          const IClock &clock);
-    double operator()(bool pressed);
+    void setPressed(bool pressed);
+    bool isActive() const;
+    double operator()();
 private:
     const IClock &clock;
-    bool lastPressed;
+    bool pressed;
     double startTime;
     double attack;
     double decay;

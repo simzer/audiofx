@@ -15,23 +15,31 @@ ADSR::ADSR(double attack,
       clock(clock)
 {
     startTime = 0;
-    lastPressed = false;
+    pressed = false;
     value = 0.0;
 }
 
-double ADSR::operator()(bool pressed)
+void ADSR::setPressed(bool pressed)
 {
-    if (pressed && !lastPressed)
+    if (pressed && !this->pressed)
         startTime = clock.getTime();
 
+    this->pressed = pressed;
+}
+
+bool ADSR::isActive() const
+{
+    return pressed || (value > 0.001);
+}
+
+double ADSR::operator()()
+{
     auto ellapsedTime = clock.getTime() - startTime;
 
     if (pressed) {
         if (ellapsedTime <= attack) update(attack/4, 1.0);
         else update(decay/4, sustain);
     } else update(release/4, 0.0);
-
-    lastPressed = pressed;
 
     return value;
 }
