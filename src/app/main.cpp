@@ -29,14 +29,18 @@ void test2()
 {
     struct Synth : public ISynth
     {
-        Synth(double freq, double gain, const IClock &clock)
-            : gain(gain),
-              wave(freq, 15, clock),
-              env(0.01,0.5,0.75,0.5,clock)
+        Synth(int channel, double freq, double gain, const IClock &clock)
+            : channel(channel),
+              gain(gain),
+              wave0(freq, 15, clock),
+              wave1(freq, 15, clock),
+              env(0.005,0.15,0.3,0.5,clock),
+              echo(44100 * 0.06, 0.75)
         {}
 
         double operator()() override {
-            auto res = gain * env() * wave();
+            auto wave = channel == 0 ? wave0() : wave1();
+            auto res = echo(gain * env() * wave);
             return res;
         }
 
@@ -49,15 +53,19 @@ void test2()
         }
 
     private:
+        int channel;
         double gain;
-        afx::wave::fourier::Triangle wave;
+        afx::wave::fourier::Triangle wave0;
+        afx::wave::fourier::Square wave1;
+        afx::effect::Echo echo;
         afx::envelope::ADSR env;
     };
 
     afx::StepClock clock(44100);
     afx::Tracker tracker(clock);
     afx::PolySynth synth([&](auto &event) {
-        return std::make_shared<Synth>(event.frequency(), event.velocity, clock);
+        return std::make_shared<Synth>
+                (event.channel, event.frequency(), event.velocity, clock);
     }, clock);
     afx::BufferedOutput<int16_t> out(2*1024);
 
