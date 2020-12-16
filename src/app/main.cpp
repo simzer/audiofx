@@ -1,5 +1,6 @@
 #include "clock.h"
 #include "stereo.h"
+#include "tracker.h"
 #include "wavegen/basic.h"
 #include "wavegen/fourier.h"
 #include "envelope.h"
@@ -13,12 +14,34 @@
 
 void test0();
 void test1();
+void test2();
 
 int main(int argc, char *argv[])
 {
-//    test0();
-    test1();
+    test2();
     return 0;
+}
+
+void test2()
+{
+    afx::StepClock clock(44100);
+    afx::Tracker tracker(clock);
+    afx::wave::fourier::Clausen wave(1, 20, clock);
+    afx::envelope::ADSR env(0.15,0.5,0.75,1.5,clock);
+    afx::BufferedOutput<int16_t> out(2*1024);
+
+    tracker.loadCsv("the_entertainer.csv");
+    tracker.onEvent = [&](auto &event) {
+        wave.setFreq(event.frequency());
+    };
+
+    while (!tracker.finished())
+    {
+        tracker();
+        auto signal = env(1) * wave();
+        out << signal << signal;
+        clock.step();
+    }
 }
 
 void test1()
