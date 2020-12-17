@@ -12,14 +12,16 @@ struct Synth : public ISynth
 {
     Synth(int channel, double freq, double gain, const IClock &clock)
         : vol(clock),
-          string(30, {0.0003, 30000, 0.000008}, 5*gain, clock)
+          string(50, { 0, 0, 0}, 2*gain, clock)
     {
         pressed = false;
-        string.material.spring = 8 * freq * freq / 100;
+        string.material.dump = 0.05 / freq;
+        string.material.mass = 0.01 / freq;
+        string.material.spring = 27 * freq;
     }
 
     double operator()() override {
-        auto res = string();
+        auto res = string() / 10000;
         vol(res);
         return res;
     }

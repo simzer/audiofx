@@ -57,7 +57,7 @@ void Node::step(double timestep)
     for (auto *edge: edges)
         force += edge->getForceOn(this);
 
-    force += - material->dump * speed * speed * (speed < 0 ? -1 : 1);
+    force += - material->dump * speed;
 
     auto acc = force / material->mass;
 
@@ -71,10 +71,14 @@ Model::Model(const IClock &clock)
 
 void Model::step()
 {
-    auto dT = clock.getStep();
+    int subSteps = 5;
 
-    for (auto &edge : edges) edge.update();
-    for (auto &node : nodes) node.step(dT);
+    auto dT = clock.getStep() / subSteps;
+
+    for (int i = 0; i < subSteps; i++) {
+        for (auto &edge : edges) edge.update();
+        for (auto &node : nodes) node.step(dT);
+    }
 }
 
 String::String(int size, Material material, double pluckTime, const IClock &clock)
@@ -103,15 +107,21 @@ double String::operator()()
 {
     step();
 
-    const double initTime = .001;
+    const double initTime = .05;
     auto actTime = clock.getTime();
     auto timeSinceStart = actTime - startTime;
+    /*if (timeSinceStart == 0) {
+        for (int i = 0; i < nodes.size(); i++) {
+            auto p = (double)i / nodes.size();
+            nodes[i].pos = p < 0.75 ? p * 0.75 : 1 - (p - 0.75) / (1-0.75);
+        }
+    }*/
     if (timeSinceStart <= initTime * pluckTime)
-        nodes[nodes.size()/8].pos = timeSinceStart / initTime;
+        nodes[1/* *nodes.size()*/].pos = sin(3.14/2 * timeSinceStart / initTime);
 
-    auto sum = 0.0;
-    for (auto &node : nodes) sum += fabs(node.pos);
-    return sum / (nodes.size()/2);
+    return edges.front().force - edges.back().force;
 
-//    return nodes[nodes.size()/8].pos;
+    return nodes[0.1*nodes.size()].pos
+         + nodes[0.15*nodes.size()].pos
+         + nodes[0.2*nodes.size()].pos;
 }
