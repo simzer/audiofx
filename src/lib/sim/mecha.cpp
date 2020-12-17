@@ -77,9 +77,11 @@ void Model::step()
     for (auto &node : nodes) node.step(dT);
 }
 
-String::String(int size, Material material, const IClock &clock)
-    : Model(clock), material(material)
+String::String(int size, Material material, double pluckTime, const IClock &clock)
+    : Model(clock), material(material), pluckTime(pluckTime)
 {
+    startTime = 0;
+
     nodes.resize(size);
     edges.resize(size + 1);
 
@@ -92,17 +94,24 @@ String::String(int size, Material material, const IClock &clock)
     edges.back().connect(&nodes.back(), &ground);
 }
 
+void String::pluck()
+{
+    startTime = clock.getTime();
+}
+
 double String::operator()()
 {
     step();
 
     const double initTime = .001;
-    auto t = clock.getTime();
-    if (t <= initTime) nodes[nodes.size()/8].pos = t / initTime;
+    auto actTime = clock.getTime();
+    auto timeSinceStart = actTime - startTime;
+    if (timeSinceStart <= initTime * pluckTime)
+        nodes[nodes.size()/8].pos = timeSinceStart / initTime;
 
     auto sum = 0.0;
     for (auto &node : nodes) sum += fabs(node.pos);
     return sum / (nodes.size()/2);
 
-    return nodes[nodes.size()/8].pos;
+//    return nodes[nodes.size()/8].pos;
 }

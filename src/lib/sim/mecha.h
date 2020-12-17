@@ -64,8 +64,11 @@ protected:
 };
 
 struct String : Model {
-    String(int size, Material material, const IClock &clock);
+    String(int size, Material material, double pluckTime, const IClock &clock);
+    void pluck();
     double operator()();
+    double pluckTime;
+    double startTime;
     Material material;
 };
 
