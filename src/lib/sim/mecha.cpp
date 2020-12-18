@@ -16,7 +16,7 @@ Edge::Edge(const Material *material)
     : material(material)
 {
     node0 = node1 = nullptr;
-    force = 0;
+    length = 0.0005;
 }
 
 void Edge::connect(Node *node0, Node *node1)
@@ -29,35 +29,46 @@ void Edge::connect(Node *node0, Node *node1)
 
 void Edge::update()
 {
-    force = material
-            ? material->spring * (node1->pos - node0->pos)
-            : 0.0;
+    auto diff = node1->pos + math::Point::X(length) - node0->pos;
+
+    diff = diff - length * diff.normalized();
+
+    auto m = (diff.abs() > 0) ? 1 : 1;
+
+    force = material ? m * material->spring * diff : math::Point();
 }
 
-double Edge::getForceOn(Node *node)
+math::Point Edge::getForceOn(Node *node)
 {
     return (node == node0) ? force :
-           (node == node1) ? -force :
-                             0.0;
+           (node == node1) ? -1 * force :
+                             math::Point();
 }
 
 Node::Node(const Material *material)
     : material(material)
 {
-    pos = 0;
-    speed = 0;
+    locked = false;
 }
 
 void Node::step(double timestep)
 {
     if (!material) return;
 
-    auto force = 0.0;
+    if (locked) {
+        speed = math::Point();
+        return;
+    }
+
+    math::Point force;
 
     for (auto *edge: edges)
         force += edge->getForceOn(this);
 
-    force += - material->dump * speed;
+    if (speed.sqrAbs() > 0.0) {
+        auto dump = - material->dump * speed.sqrAbs();
+        force += dump * speed.normalized();
+    }
 
     auto acc = force / material->mass;
 
@@ -107,21 +118,26 @@ double String::operator()()
 {
     step();
 
-    const double initTime = .05;
+    auto F = edges.front().force - edges.back().force;
+    ground.speed = F / 200;
+    ground.pos += ground.speed * clock.getStep();
+    ground.pos *= 0.98;
+
+    const double initTime = .02;
     auto actTime = clock.getTime();
     auto timeSinceStart = actTime - startTime;
-    /*if (timeSinceStart == 0) {
-        for (int i = 0; i < nodes.size(); i++) {
-            auto p = (double)i / nodes.size();
-            nodes[i].pos = p < 0.75 ? p * 0.75 : 1 - (p - 0.75) / (1-0.75);
-        }
-    }*/
-    if (timeSinceStart <= initTime * pluckTime)
-        nodes[1/* *nodes.size()*/].pos = sin(3.14/2 * timeSinceStart / initTime);
+    auto i = 2 + 0 * nodes.size();
+    if (timeSinceStart <= initTime * pluckTime) {
+        nodes[i].locked = true;
+        nodes[i].pos.y = timeSinceStart / initTime;
+    }
+    else nodes[i].locked = false;
 
-    return edges.front().force - edges.back().force;
+    return ground.pos.abs() / 2;
 
-    return nodes[0.1*nodes.size()].pos
-         + nodes[0.15*nodes.size()].pos
-         + nodes[0.2*nodes.size()].pos;
+    auto sum = 0.0;
+    for (auto node : nodes) sum += node.pos.y;
+    return sum / nodes.size() / 100;
+
+    return F.y / 1000000;
 }

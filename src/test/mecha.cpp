@@ -12,16 +12,16 @@ struct Synth : public ISynth
 {
     Synth(int channel, double freq, double gain, const IClock &clock)
         : vol(clock),
-          string(50, { 0, 0, 0}, 2*gain, clock)
+          string(20, { 0, 0, 0}, 2*gain, clock)
     {
         pressed = false;
-        string.material.dump = 0.05 / freq;
+        string.material.dump = 0.001 * 0.06 / freq;
         string.material.mass = 0.01 / freq;
-        string.material.spring = 27 * freq;
+        string.material.spring = 0.1 * 27 * freq;
     }
 
     double operator()() override {
-        auto res = string() / 10000;
+        auto res = string() * 50;
         vol(res);
         return res;
     }
@@ -33,7 +33,7 @@ struct Synth : public ISynth
     }
 
     bool isFinished() override {
-        return !pressed && vol.getVolume() < 0.01;
+        return !pressed && vol.getVolume() < 0.001;
     }
 
     bool pressed;
@@ -53,13 +53,14 @@ void mecha()
 
     tracker.loadCsv("the_entertainer.csv");
     tracker.onEvent = [&](auto &event) {
+        std::cerr << clock.getTime() << ": " << event.note << "\n";
         synth.push(event);
     };
 
     while (!tracker.finished() || synth.isActive())
     {
         tracker();
-        auto signal = 2 * synth();
+        auto signal = 10 * synth();
         out << signal << signal;
         clock.step();
     }
